@@ -1,5 +1,6 @@
-#Visual Studio Code
+#Visual Studio Code and PyCharm
 .vscode/
+.idea/
 
 #workspace
 workspace/

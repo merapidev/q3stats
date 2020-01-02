@@ -1,6 +1,7 @@
+import datetime
 import os
 import re
-import datetime
+
 from pymongo import MongoClient
 
 
@@ -14,38 +15,49 @@ def load_logs():
     regex = re.compile('^[0-9]{4}.[0-9]{2}.[0-9]{2}_#[0-9]+')
 
     with os.scandir('files/') as files:
-        for file_with_logs in files:
+        for log_file in files:
 
-            if not regex.match(file_with_logs.name):
+            if not regex.match(log_file.name):
                 continue
 
+            with open(log_file) as file_pointer:
+                load_games(file_pointer, log_file, raw_logs)
+
+
+def load_games(file_pointer, log_file, raw_logs):
+    raw_log_game = {}
+    for line in file_pointer:
+
+        if is_start_game(line):
+            raw_log_game = {
+                "filename": log_file.name,
+                "date": datetime.datetime.strptime(log_file.name[:10], "%Y.%m.%d"),
+                "entries": []
+            }
+            continue
+
+        if is_end_game(line):
+            if not raw_log_game:
+                continue
+            raw_logs.insert_one(raw_log_game)
             raw_log_game = {}
+            continue
 
-            print(file_with_logs.name)
-            print(raw_log_game)
+        if is_game(line):
+            raw_log_game["entries"].append(line)
 
-            with open(file_with_logs) as file_pointer:
-                for line in file_pointer:
 
-                    if "Com_TouchMemory" in line:
-                        raw_log_game = {
-                            "filename": file_with_logs.name,
-                            "date": datetime.datetime.strptime(file_with_logs.name[:10], "%Y.%m.%d"),
-                            "entries": []
-                        }
-                        continue
+def is_game(line):
+    return "^7" in line
 
-                    if "RE_Shutdown" in line:
-                        if not raw_log_game:
-                            continue
-                        raw_logs.insert(raw_log_game)
-                        raw_log_game = {}
-                        continue
 
-                    if "^7" in line:
-                        raw_log_game["entries"].append(line)
+def is_end_game(line):
+    return "RE_Shutdown" in line
+
+
+def is_start_game(line):
+    return "Com_TouchMemory" in line
 
 
 if __name__ == "__main__":
-
     load_logs()

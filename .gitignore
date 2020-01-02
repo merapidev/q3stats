@@ -1,6 +1,9 @@
 #Visual Studio Code
 .vscode/
 
+#workspace
+workspace/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

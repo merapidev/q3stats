@@ -2,10 +2,16 @@ import datetime
 import os
 import re
 
+import click
 from pymongo import MongoClient
 
+@click.group()
+def main():
+    pass
 
-def load_logs():
+@main.command()
+def load():
+    """Load new log files to DB"""
     print("Load logs")
 
     client = MongoClient('localhost', 27017)
@@ -60,4 +66,4 @@ def is_start_game(line):
 
 
 if __name__ == "__main__":
-    load_logs()
+    main()

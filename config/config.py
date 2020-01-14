@@ -9,4 +9,12 @@ class Config(object):
 
     def load_configuration(self, filename):
         with open(filename, "r") as stream:
-            return yaml.load(stream, loader=yaml.FullLoader)
+            return yaml.load(stream, Loader=yaml.FullLoader)
+
+    @property
+    def files_directory(self):
+        return self.configuration['files_directory']
+
+    @property
+    def mongodb(self):
+        return self.configuration['mongodb']

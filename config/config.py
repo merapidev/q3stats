@@ -16,5 +16,9 @@ class Config(object):
         return self.configuration['files_directory']
 
     @property
+    def logs(self):
+        return self.configuration['logs']
+
+    @property
     def mongodb(self):
         return self.configuration['mongodb']

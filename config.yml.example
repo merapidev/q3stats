@@ -1,4 +1,7 @@
-files_directory: files/
+files_directory: files
+logs:
+  directory: logs
+  filename: q3stat.log
 mongodb:
   host: localhost
   port: 27017

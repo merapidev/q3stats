@@ -31,4 +31,12 @@ class TestConfig(unittest.TestCase):
 
         config = Config(filename=expected_file_location)
 
-        self.assertEqual('files/', config.files_directory)
+        self.assertEqual('files', config.files_directory)
+
+    def test_expect_logs_configuration(self):
+        expected_file_location = os.path.join(self.fixture_directory, "config.yml")
+
+        config = Config(filename=expected_file_location)
+
+        self.assertEqual('logs', config.logs['directory'])
+        self.assertEqual('q3stat.log', config.logs['filename'])

@@ -2,15 +2,13 @@ import datetime
 import os
 import re
 
-from common.collection import Collection
+from repository.rawdata import RawData
 from .base import Process as BaseProcess
 
 
 class Loader(BaseProcess):
 
     def execute(self):
-
-        self.storage.set_up_collection(Collection.RAW_DATA)
 
         regex = re.compile('^[0-9]{4}.[0-9]{2}.[0-9]{2}_#[0-9]+')
 
@@ -27,6 +25,8 @@ class Loader(BaseProcess):
 
     def load_contest(self, file_pointer, log_file):
 
+        repository = self.repositories.get(RawData)
+
         raw_log_game = {}
         for line in file_pointer:
 
@@ -41,7 +41,7 @@ class Loader(BaseProcess):
             if self.__is_end_game(line=line):
                 if not raw_log_game:
                     continue
-                self.storage.insert_one(document=raw_log_game)
+                repository.insert_one(document=raw_log_game)
                 raw_log_game = {}
                 continue
 
